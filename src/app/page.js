@@ -1,95 +1,118 @@
+"use client";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import Image from "next/image";
-import styles from "./page.module.css";
-
+import SidePic from '../app/Images/SidePic.jpg';
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [templates, setTemplates] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+  useEffect(() => {
+    fetchTemplates();
+  }, [page]); // ✅ Runs when `page` updates
+
+  const fetchTemplates = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/designs?page=${page}`);
+      const data = await response.json();
+
+      if (Array.isArray(data.templates)) {
+        // ✅ Prevent duplicates
+        const newTemplates = data.templates.filter(
+          (template) => !templates.some((t) => t._id === template._id)
+        );
+        setTemplates((prev) => [...prev, ...newTemplates]);
+      } else {
+        console.error("Invalid data format:", data);
+      }
+    } catch (error) {
+      console.error("Error fetching templates:", error);
+    }
+    setLoading(false);
+  };
+//console.log(process.env.NODE_ENV);
+
+  return (
+    <div>
+      <div style={{display:'flex',flexDirection:'row'}}>
+      <div id="companyName" > <h1> PrentBala</h1></div>
+      <div style={{marginLeft:100}}>
+        <Image src={SidePic} width={800} height={200} alt="Poster"/>
+      </div>
+      </div>
+      <h1>Templates</h1>
+      <div className="grid-container">
+        {templates.map((template) => (
+          <div key={template._id} className="template-card"> {/* ✅ Use unique `_id` */}
+            <img src={template.display_pic} alt="Template Preview" className="template-image" />
+            <p className="description">{template.description}</p>
+            <p className="price">Price: ₹{template.price}</p>
+            <Link href={`/Checkout?id=${template._id}`}>
+              <button>Buy now</button>
+            </Link>
+          </div>
+        ))}
+      </div>
+
+      <button onClick={() => setPage((prev) => prev + 1)} disabled={loading} className="load-more">
+        {loading ? "Loading..." : "Load More"}
+      </button>
+
+      <style jsx>{`
+        .container {
+          max-width: 100vw;
+          margin: auto;
+          text-align: center;
+          padding: 20px;
+        }
+        .grid-container {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 20px;
+          justify-content: center;
+        }
+        .template-card {
+          border: 1px solid #ddd;
+          border-radius: 10px;
+          padding: 15px;
+          width: 14vw;
+          text-align: center;
+          background: #fff;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .template-image {
+          width: 100%;
+          height: 150px;
+          object-fit: cover;
+          border-radius: 5px;
+        }
+        .description {
+          font-size: 14px;
+          color: #333;
+          margin-top: 10px;
+        }
+        .price {
+          font-size: 16px;
+          font-weight: bold;
+          color: #007bff;
+        }
+        .load-more {
+          margin-top: 20px;
+          padding: 10px 20px;
+          background: #007bff;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 16px;
+        }
+        .load-more:disabled {
+          background: #ccc;
+          cursor: not-allowed;
+        }
+      `}</style>
     </div>
   );
 }

@@ -1,0 +1,13 @@
+
+      <div id="companyName"> <h1> PrentBala</h1></div>
+
+         <div className="intro">
+        <br />
+       <br />
+        
+      </div>
+
+     
+
+      
+        </div>
