@@ -11,7 +11,7 @@ export default function Upload() {
   const [description, setDescription] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [preview, setPreview] = useState(null);
-  const [cardtype, setcardType] = useState()
+  const [cardtype, setcardType] = useState("Select")
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
@@ -32,7 +32,7 @@ export default function Upload() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!displayPic || !template || !price || !description) {
+    if (!displayPic || !template || !price || !description ||cardtype=="Select" || !cardtype) {
       alert("All fields are required!");
       return;
     }
@@ -44,8 +44,8 @@ export default function Upload() {
     formData.append("template", template);
     formData.append("price", price);
     formData.append("description", description);
-    formData.append("cardType", cardtype)
-    // console.log({type:type});
+    formData.append("cardtype", cardtype)
+     console.log({type:cardtype});
 
 
     try {
@@ -127,9 +127,7 @@ export default function Upload() {
           <option value="Visiting-card">Visiting card</option>
           <option value="Greeting-card">Greeting card</option>
           <option value="Poster">Poster</option>
-          <option value=""></option>
-          <option value=""></option>
-          <option value=""></option>
+          
         </select>
 
         {/* Price Input */}
