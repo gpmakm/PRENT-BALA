@@ -43,9 +43,9 @@ export default function Home() {
             <img src={template.display_pic} alt="Template Preview" className="template-image" />
             <p className="description">{template.description}</p>
             <p className="price">Price: ₹{template.price}</p>
-            <Link href={`/Checkout?id=${template._id}`}>
+            <a href={`/Checkout?id=${template._id}`}>
               <button>Buy now</button>
-            </Link>
+            </a>
           </div>
         ))}
       </div>

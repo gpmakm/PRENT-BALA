@@ -25,8 +25,17 @@ const page = () => {
         <div className="contact">
         <p>Contact us at: Near State Bank, Gupta complex, Kalika path, Hasanpur bazaar</p>
         <p>
-          Call us on: <span id="number">+91 7371819171, +91 9576256696</span>
+          Call us on: +91 7371819171, +91 9576256696
         </p>
+        <div className='customOrder'>
+          <p>
+            If you want to give any custom order just click the give button to chat with me
+          </p>
+        <a href="https://wa.me/917371819171?text=Hello!%20I%20want%20to%20discuss%20something%20with%20you." target="_blank" id='whatsapp' style={{color:'green'}}>WhatsApp PRENTBALA</a>
+    
+
+
+        </div>
       </div>
     </div>
   )

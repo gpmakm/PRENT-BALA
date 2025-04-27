@@ -36,12 +36,15 @@ export default function Home() {
 
   return (
     <div>
-      <div style={{display:'flex',flexDirection:'row'}}>
-      <div id="companyName" > <h1> PrentBala</h1></div>
-      <div style={{marginLeft:100}}>
-        <Image src={SidePic} width={800} height={200} alt="Poster"/>
-      </div>
-      </div>
+    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '0', margin: '0'}}>
+  <div id="companyName">
+    <h1>PrentBala</h1>
+  </div>
+  <div style={{display: 'flex', alignItems: 'center'}} className="poster-container">
+    <Image src={SidePic} width={800} height={200} alt="Poster" id="posterImage"/>
+  </div>
+</div>
+
       <h1>Templates</h1>
       <div className="grid-container">
         {templates.map((template) => (
@@ -49,9 +52,9 @@ export default function Home() {
             <img src={template.display_pic} alt="Template Preview" className="template-image" />
             <p className="description">{template.description}</p>
             <p className="price">Price: ₹{template.price}</p>
-            <Link href={`/Checkout?id=${template._id}`}>
+            <a href={`/Checkout?id=${template._id}`}>
               <button>Buy now</button>
-            </Link>
+            </a>
           </div>
         ))}
       </div>
@@ -112,6 +115,17 @@ export default function Home() {
           background: #ccc;
           cursor: not-allowed;
         }
+          @media screen and (max-width:768px){
+          .grid-container{
+          grid-template-columns:repeat(2,1fr);
+          }
+          .template-card{
+          border: 2px solid grey;
+          border-radius: 25px;
+          width: 40vw;
+          gap: 1px;
+          }
+          }
       `}</style>
     </div>
   );
