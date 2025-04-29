@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import SidePic from '../app/Images/SidePic.jpg';
+import bg from './Images/Website-Backgrounds-For-Desktop.jpg'
 export default function Home() {
   const [templates, setTemplates] = useState([]);
   const [page, setPage] = useState(1);

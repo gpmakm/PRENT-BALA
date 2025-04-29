@@ -8,6 +8,8 @@ body{
   background-size: cover;
   width: 100vw;
   height: 100vh;
+  background-image: url('../app/Images/Website-Backgrounds-For-Desktop.jpg');
+  background-size: cover;
 }
 ul{
 
@@ -17,6 +19,17 @@ ul{
 gap: 15px;
 
 /* justify-content: center; */
+}
+.customOrder,.contact{
+  color: white;
+}
+.customOrder a{
+  background-color: white;
+  padding: 7px;
+  border-radius: 25px 5px 25px 5px;
+  border: 1px solid green;
+  box-shadow: 3px 3px 5px green;
+  margin-top: 5px;
 }
 li,span{
   list-style-type: none;
@@ -111,6 +124,7 @@ a{
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: larger;
   text-align: center;
+  
 }
 #companyName h1{
   text-transform: uppercase;
@@ -314,4 +328,6 @@ label{
     align-items: center;
 }
 }
-
+.contact p{
+  color: white;
+}
