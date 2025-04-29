@@ -1,3 +1,5 @@
+"use client"
+
 import { Suspense, useEffect, useState, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import QRCode from "qrcode";
