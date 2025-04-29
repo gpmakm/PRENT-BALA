@@ -88,13 +88,15 @@ export default function Upload() {
     try {
       const response = await fetch(`/api/designs?page=${page}`);
       const data = await response.json();
-
+  
       if (Array.isArray(data.templates)) {
-        // ✅ Prevent duplicates
-        const newTemplates = data.templates.filter(
-          (template) => !templates.some((t) => t._id === template._id)
-        );
-        setTemplates((prev) => [...prev, ...newTemplates]);
+        setTemplates((prev) => {
+          const combined = [...prev, ...data.templates];
+          const uniqueTemplates = Array.from(
+            new Map(combined.map((item) => [item._id, item])).values()
+          );
+          return uniqueTemplates;
+        });
       } else {
         console.error("Invalid data format:", data);
       }
@@ -103,6 +105,7 @@ export default function Upload() {
     }
     setLoading(false);
   };
+  
   return (
     <div className="container">
       <h2>Upload Template</h2>
@@ -121,7 +124,7 @@ export default function Upload() {
 
         {/* Selecting type of card */}
         <label>Choose card type</label>
-        <select onChange={handleTypeChange} value={cardtype} defaultValue={"Select"}>
+        <select onChange={handleTypeChange} value={cardtype}>
           <option value="Select" >Select</option>
           <option value="Shaadi-card">Shaadi-card</option>
           <option value="Visiting-card">Visiting card</option>
