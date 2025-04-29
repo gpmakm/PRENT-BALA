@@ -1,10 +1,8 @@
-"use client";
-
-import { useEffect, useState, useRef } from "react";
+import { Suspense, useEffect, useState, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import QRCode from "qrcode";
 
-export default function Payment() {
+const PaymentPage = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const [template, setTemplate] = useState(null);
@@ -117,5 +115,13 @@ export default function Payment() {
         <p>Loading template...</p>
       )}
     </div>
+  );
+};
+
+export default function PaymentWithSuspense() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PaymentPage />
+    </Suspense>
   );
 }
