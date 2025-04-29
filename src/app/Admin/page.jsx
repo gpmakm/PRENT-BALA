@@ -156,7 +156,7 @@ export default function Upload() {
           {isUploading ? "Uploading..." : "Upload Template"}
         </button>
       </form>
-      <button type="button">Delete all templates</button>
+     
       <div>
         <div className="grid-container">
           {templates.map((template) => (
@@ -165,9 +165,9 @@ export default function Upload() {
               <p className="description">{template.description}</p>
               <p className="salesCount" style={{textAlign:'center'}}>Sold copies: {template.salesCount}</p>
               <p className="price">Price: ₹{template.price}</p>
-              <Link href={`/removeDelTemp?id=${template._id}`}>
+              <a href={`/DeleteTemp?id=${template._id}`}>
                 <button>Delete now</button>
-              </Link>
+              </a>
             </div>
           ))}
         </div>
