@@ -1,43 +1,18 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import QRCode from "qrcode";
 
-export default function Payment() {
+// 🎯 Payment Component
+function Payment() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+
   const [template, setTemplate] = useState(null);
-  const [tid, setTid] = useState(""); // Transaction ID state
-  const [message, setMessage] = useState(""); // Message state
-  const qrRef = useRef(null); // Reference for QR code canvas
+  const [tid, setTid] = useState(""); // Transaction ID
+  const [message, setMessage] = useState(""); // Status message
 
-  // ⛔️ DELETE FUNCTION
-  const deleteTemplate = async () => {
-    try {
-      const res = await fetch("/api/delete", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: template._id }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        setMessage("✅ Template deleted successfully.");
-        setTemplate(null); // Clear the template from UI
-      } else {
-        setMessage(data.message || "❌ Failed to delete template.");
-      }
-    } catch (error) {
-      console.error("Delete error:", error);
-      setMessage("⚠️ Something went wrong while deleting.");
-    }
-  };
-
-  // 🧠 Fetching template based on ID
+  // 🔄 Fetch template on ID change
   useEffect(() => {
     if (id) {
       fetch(`/api/designs?page=1&limit=100`)
@@ -47,37 +22,32 @@ export default function Payment() {
           if (selectedTemplate) {
             setTemplate(selectedTemplate);
           } else {
-            console.error("Template not found for ID:", id);
+            setMessage("⚠️ Template not found.");
           }
         })
         .catch((error) => console.error("Error fetching template:", error));
     }
   }, [id]);
 
-  // 🧾 Form submission for download
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  // ❌ Delete Template Function
+  const deleteTemplate = async () => {
     try {
-      const res = await fetch("/api/download-design", {
-        method: "POST",
+      const res = await fetch("/api/delete", {
+        method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          templateId: template._id,
-          transactionId: tid,
-        }),
+        body: JSON.stringify({ id: template._id }),
       });
 
-      const response = await res.json();
-
+      const data = await res.json();
       if (res.ok) {
-        window.location.href = response.downloadUrl; // Direct download
+        setMessage("✅ Template deleted successfully.");
+        setTemplate(null);
       } else {
-        setMessage(response.message || "Error processing request");
+        setMessage(data.message || "❌ Failed to delete template.");
       }
     } catch (error) {
-      console.error("Error:", error);
-      setMessage("Server error, please try again later.");
+      console.error("Delete error:", error);
+      setMessage("⚠️ Something went wrong.");
     }
   };
 
@@ -89,23 +59,20 @@ export default function Payment() {
           <img src={template.display_pic} alt="Template" width="300px" />
           <h2>Price: ₹{template.price}</h2>
 
-         
-            <input
-              type="text"
-              value={tid}
-              onChange={(e) => setTid(e.target.value)}
-              required
-              style={{
-                padding: "8px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-                fontSize: "14px",
-                textAlign: "center",
-              }}
-            />
+          <input
+            type="text"
+            value={tid}
+            onChange={(e) => setTid(e.target.value)}
+            required
+            style={{
+              padding: "8px",
+              borderRadius: "5px",
+              border: "1px solid #ccc",
+              fontSize: "14px",
+              textAlign: "center",
+            }}
+          />
 
-           
-          
           <button
             onClick={deleteTemplate}
             style={{
@@ -122,13 +89,22 @@ export default function Payment() {
             Delete Template
           </button>
 
-          {message && (
-            <p style={{ color: "red", marginTop: "10px" }}>{message}</p>
-          )}
+          {message && <p style={{ color: "red", marginTop: "10px" }}>{message}</p>}
         </>
       ) : (
         <p>Loading template...</p>
       )}
     </div>
+  );
+}
+
+// 🌟 Page Component with Suspense
+import { Suspense } from "react";
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Payment />
+    </Suspense>
   );
 }
